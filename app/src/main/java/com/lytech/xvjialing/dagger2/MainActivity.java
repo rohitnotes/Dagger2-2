@@ -7,16 +7,23 @@ import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
 
+//    @Inject
+//    ApiService apiService;
+
     @Inject
-    ApiService apiService;
+    UserManager userManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DaggerUserComponent.create().inject(this);
+//        DaggerUserComponent.create().inject(this);
+//
+//        apiService.register();
 
-        apiService.register();
+
+        DaggerUserComponent.create().inject(this);
+        userManager.register();
     }
 }

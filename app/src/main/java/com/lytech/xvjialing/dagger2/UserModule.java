@@ -1,5 +1,7 @@
 package com.lytech.xvjialing.dagger2;
 
+import android.util.Log;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -10,13 +12,17 @@ import dagger.Provides;
 @Module
 public class UserModule {
 
-    @Provides
-    public ApiService provideApiService(){
-        return new ApiService();
-    }
+    private static final String TAG=UserModule.class.getSimpleName();
 
 //    @Provides
-//    public UserManager provideUserManager(){
-//        return new UserManager();
+//    public ApiService provideApiService(){
+//        Log.d(TAG, "provide ApiService  ");
+//        return new ApiService();
 //    }
+
+    @Provides
+    public UserManager provideUserManager(ApiService apiService){
+        Log.d(TAG, "provide  UserManager");
+        return new UserManager(apiService);
+    }
 }
