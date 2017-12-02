@@ -2,6 +2,8 @@
 
 ## dagger构成
 
+构成的元素有三种：Module,Component,Container
+
 ![dagger2构成](./img/dagger2构成.png)
 
 ## dagger2使用
