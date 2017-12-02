@@ -4,7 +4,7 @@
 
 构成的元素有三种：Module,Component,Container
 
-![dagger2构成](./img/dagger2构成.png)
+![dagger2构成](./img/dagger2构成.jpg)
 
 ## dagger2使用
 
