@@ -15,7 +15,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DaggerUserComponent.create().inject(this);
+        DaggerUserComponent
+                .builder()
+                .userModule(new UserModule(this))
+                .build()
+                .inject(this);
 
         userManager.register();
     }

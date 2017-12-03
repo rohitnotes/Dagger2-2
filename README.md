@@ -324,3 +324,115 @@ D/ApiService: register: ApiService
 
 说明APIservice默认调用的是带有@Inject注解的构造方法
 
+下面在UserModule中重新加入UserStore,并在UserStore的构造方法中加入Context参数
+
+```
+public class UserStore {
+
+    private static final String TAG=ApiService.class.getSimpleName();
+
+    private Context context;
+
+    public UserStore(Context context) {
+        this.context = context;
+    }
+
+    public void register(){
+        Log.d(TAG, "register: UserSore");
+    }
+}
+```
+
+然后UserManager进行修改
+
+```
+public class UserManager {
+
+    private UserStore userStore;
+
+    private ApiService apiService;
+
+    public UserManager(ApiService apiService,UserStore userStore) {
+        this.userStore=userStore;
+
+        this.apiService=apiService;
+    }
+
+    public void register(){
+
+        userStore.register();
+
+        apiService.register();
+    }
+}
+```
+
+UserModule也进行修改，在UserModule的构造函数中加入Context参数
+
+```
+import android.content.Context;
+import android.util.Log;
+
+import dagger.Module;
+import dagger.Provides;
+
+/**
+ * Created by xvjialing on 2017/12/3.
+ */
+
+@Module    //以此显示这是一个Module
+public class UserModule {
+
+    private static  final String TAG=UserModule.class.getSimpleName();
+
+    private Context context;
+
+    public UserModule(Context context) {
+        this.context = context;
+    }
+
+    @Provides
+    public String url(){
+        return "www.test.com";
+    }
+
+    @Provides
+    public UserStore provideUserStore(){
+        return new UserStore(this.context);
+    }
+
+    @Provides
+    public UserManager userManager(ApiService apiService,UserStore userStore){
+        Log.d(TAG, "userManager: ");
+        return new UserManager(apiService,userStore);
+    }
+}
+```
+
+最后修改MainActivity
+
+```
+public class MainActivity extends AppCompatActivity {
+
+    @Inject
+    UserManager userManager;
+
+	// 因为Module中需要传参，所以DaggerUserComponent无法使用create方法，而是使用builder方法，并将context参数传入其中
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        DaggerUserComponent
+                .builder()
+                .userModule(new UserModule(this))
+                .build()
+                .inject(this);
+
+        userManager.register();
+    }
+}
+```
+
+
+

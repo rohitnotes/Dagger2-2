@@ -1,5 +1,6 @@
 package com.lytech.xvjialing.dagger2;
 
+import android.content.Context;
 import android.util.Log;
 
 import dagger.Module;
@@ -14,7 +15,13 @@ public class UserModule {
 
     private static  final String TAG=UserModule.class.getSimpleName();
 
-//    @Provides  //告诉Dagger想要构造的对象并提供这个依赖
+    private Context context;
+
+    public UserModule(Context context) {
+        this.context = context;
+    }
+
+    //    @Provides  //告诉Dagger想要构造的对象并提供这个依赖
 //    public ApiService getApiService(){
 //        Log.d(TAG, "getApiService: ");
 //        return new ApiService();
@@ -26,8 +33,13 @@ public class UserModule {
     }
 
     @Provides
-    public UserManager userManager(ApiService apiService){
+    public UserStore provideUserStore(){
+        return new UserStore(this.context);
+    }
+
+    @Provides
+    public UserManager userManager(ApiService apiService,UserStore userStore){
         Log.d(TAG, "userManager: ");
-        return new UserManager(apiService);
+        return new UserManager(apiService,userStore);
     }
 }

@@ -10,15 +10,15 @@ public class UserManager {
 
     private ApiService apiService;
 
-    public UserManager(ApiService apiService) {
-//        this.userStore=new UserStore();
+    public UserManager(ApiService apiService,UserStore userStore) {
+        this.userStore=userStore;
 
         this.apiService=apiService;
     }
 
     public void register(){
 
-//        userStore.register();
+        userStore.register();
 
         apiService.register();
     }
