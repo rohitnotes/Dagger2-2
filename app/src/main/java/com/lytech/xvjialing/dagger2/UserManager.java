@@ -1,26 +1,25 @@
 package com.lytech.xvjialing.dagger2;
 
-import android.util.Log;
-
-
 /**
- * Created by xvjialing on 2017/11/25.
+ * Created by xvjialing on 2017/12/3.
  */
 
 public class UserManager {
 
-    private static final String TAG=UserManager.class.getSimpleName();
-
-    private ApiService apiService;
     private UserStore userStore;
 
-    public UserManager(ApiService apiService) {
-        this.apiService = apiService;
+    private ApiService apiService;
+
+    public UserManager() {
+        userStore=new UserStore();
+
+        apiService=new ApiService();
     }
 
-
     public void register(){
-        Log.d(TAG, "userManager register: ");
+
+        userStore.register();
+
         apiService.register();
     }
 }

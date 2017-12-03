@@ -7,23 +7,24 @@ import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
 
-//    @Inject
-//    ApiService apiService;
+//
+//    private UserManager userManager;
 
-    @Inject
-    UserManager userManager;
+    @Inject   //告诉dagger此处需要依赖注入
+    ApiService mApiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        DaggerUserComponent.create().inject(this);
 //
-//        apiService.register();
-
+//        userManager = new UserManager();
+//
+//        userManager.register();
 
         DaggerUserComponent.create().inject(this);
-        userManager.register();
+
+        mApiService.register();
+
     }
 }
