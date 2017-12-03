@@ -209,7 +209,7 @@ public class UserModule {
 
 UserComponent不用修改，最后修改一下MainActivity
 
-```
+```java
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -233,4 +233,44 @@ public class MainActivity extends AppCompatActivity {
 ```
 
 这样UserManager中带参数注入的第一种方法就完成了。
+
+第二种方法,在ApiService的构造方法中对ApiService进行注入
+
+```
+public class ApiService {
+
+    private static final String TAG=ApiService.class.getSimpleName();
+
+    @Inject
+    public ApiService() {
+        Log.d(TAG, "ApiService: constractor");
+    }
+
+    public void register(){
+        Log.d(TAG, "register: ApiService");
+    }
+}
+```
+
+并将UserManager中将之前注入ApiService的方法注释掉
+
+```
+@Module    //以此显示这是一个Module
+public class UserModule {
+
+    private static  final String TAG=UserModule.class.getSimpleName();
+
+//    @Provides  //告诉Dagger想要构造的对象并提供这个依赖
+//    public ApiService getApiService(){
+//        Log.d(TAG, "getApiService: ");
+//        return new ApiService();
+//    }
+
+    @Provides
+    public UserManager userManager(ApiService apiService){
+        Log.d(TAG, "userManager: ");
+        return new UserManager(apiService);
+    }
+}
+```
 
