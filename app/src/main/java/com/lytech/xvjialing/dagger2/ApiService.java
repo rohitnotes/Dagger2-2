@@ -12,9 +12,14 @@ public class ApiService {
 
     private static final String TAG=ApiService.class.getSimpleName();
 
-    @Inject
+//    @Inject
     public ApiService() {
         Log.d(TAG, "ApiService: constractor");
+    }
+
+    @Inject
+    public ApiService(String url) {
+        Log.d(TAG, "ApiService url : "+url);
     }
 
     public void register(){

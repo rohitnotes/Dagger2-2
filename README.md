@@ -186,10 +186,6 @@ public class UserManager {
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Created by xvjialing on 2017/12/3.
- */
-
 @Module    //以此显示这是一个Module
 public class UserModule {
 
@@ -273,4 +269,58 @@ public class UserModule {
     }
 }
 ```
+
+现在将ApiService进行修改
+
+```
+public class ApiService {
+
+    private static final String TAG=ApiService.class.getSimpleName();
+
+    public ApiService() {
+        Log.d(TAG, "ApiService: constractor");
+    }
+
+    @Inject
+    public ApiService(String url) {
+        Log.d(TAG, "ApiService url : "+url);
+    }
+
+    public void register(){
+        Log.d(TAG, "register: ApiService");
+    }
+}
+
+```
+
+并在UserModule中加入提供url的依赖
+
+```
+@Module    //以此显示这是一个Module
+public class UserModule {
+
+    private static  final String TAG=UserModule.class.getSimpleName();
+
+    @Provides
+    public String url(){
+        return "www.test.com";
+    }
+
+    @Provides
+    public UserManager userManager(ApiService apiService){
+        Log.d(TAG, "userManager: ");
+        return new UserManager(apiService);
+    }
+}
+```
+
+最终的结果是
+
+```
+D/ApiService: ApiService url : www.test.com
+D/UserModule: userManager: 
+D/ApiService: register: ApiService
+```
+
+说明APIservice默认调用的是带有@Inject注解的构造方法
 

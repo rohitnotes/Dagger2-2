@@ -21,6 +21,11 @@ public class UserModule {
 //    }
 
     @Provides
+    public String url(){
+        return "www.test.com";
+    }
+
+    @Provides
     public UserManager userManager(ApiService apiService){
         Log.d(TAG, "userManager: ");
         return new UserManager(apiService);
