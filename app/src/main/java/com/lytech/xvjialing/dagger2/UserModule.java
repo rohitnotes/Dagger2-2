@@ -14,4 +14,9 @@ public class UserModule {
     public ApiService getApiService(){
         return new ApiService();
     }
+
+    @Provides
+    public UserManager userManager(ApiService apiService){
+        return new UserManager(apiService);
+    }
 }

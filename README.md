@@ -157,3 +157,80 @@ public class MainActivity extends AppCompatActivity {
 
 这样一个简单的依赖注入就完成了。
 
+
+
+下面是一个带ApiService参数注入的例子。
+
+首先改变一下UserManager，暂时只使用ApiService
+
+```
+public class UserManager {
+
+    private ApiService apiService;
+
+    public UserManager(ApiService apiService) {
+
+        this.apiService=apiService;
+    }
+
+    public void register(){
+
+        apiService.register();
+    }
+}
+```
+
+再修改一下UserModule
+
+```
+import dagger.Module;
+import dagger.Provides;
+
+/**
+ * Created by xvjialing on 2017/12/3.
+ */
+
+@Module    //以此显示这是一个Module
+public class UserModule {
+
+    @Provides  //告诉Dagger想要构造的对象并提供这个依赖
+    public ApiService getApiService(){
+        return new ApiService();
+    }
+
+    @Provides
+    public UserManager userManager(ApiService apiService){
+        return new UserManager(apiService);
+    }
+}
+```
+
+这里的ApiService有两种注入方法，先使用在UserModule中注入的这种方法。
+
+UserComponent不用修改，最后修改一下MainActivity
+
+```
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
+import javax.inject.Inject;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Inject
+    UserManager userManager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        DaggerUserComponent.create().inject(this);
+
+        userManager.register();
+    }
+}
+```
+
+这样UserManager中带参数注入的第一种方法就完成了。
+
