@@ -10,7 +10,8 @@ import dagger.Provides;
  * Created by xvjialing on 2017/12/3.
  */
 
-@Module    //以此显示这是一个Module
+//@Module(includes = HttpModule.class)    //以此显示这是一个Module
+@Module  //以此显示这是一个Module
 public class UserModule {
 
     private static  final String TAG=UserModule.class.getSimpleName();
@@ -27,10 +28,6 @@ public class UserModule {
 //        return new ApiService();
 //    }
 
-    @Provides
-    public String url(){
-        return "www.test.com";
-    }
 
     @Provides
     public UserStore provideUserStore(){

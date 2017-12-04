@@ -1,4 +1,4 @@
-# dagger2
+# ddagger2
 
 ## dagger构成
 
@@ -433,6 +433,157 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
+
+## 模块化
+
+现在在ApiService中加入OKhttp请求
+
+```
+public class ApiService {
+
+    private static final String TAG=ApiService.class.getSimpleName();
+
+    private OkHttpClient okHttpClient;
+
+    @Inject
+    public ApiService(OkHttpClient okHttpClient){
+        this.okHttpClient=okHttpClient;
+    }
+
+    public void register(){
+        Log.d(TAG, "register: ApiService");
+        Request request=new Request.Builder()
+                .get()
+                .url("http://www.xvjialing.ink:32771/girls")
+                .build();
+        okHttpClient.newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result = response.body().string();
+                        Log.d(TAG, "onResponse: "+result);
+                    }
+                });
+    }
+}
+```
+
+再创建一个HttpModule专门用来存放网络相关依赖
+
+```
+@Module
+public class HttpModule {
+
+//    @Singleton  //通过这个注解实现OkHttpClient永远都是单例
+    @Provides
+    public OkHttpClient provideOkHttpClient(){
+        return new OkHttpClient().newBuilder().build();
+    }
+}
+```
+
+再在UserModule中include 刚创建的HttpModule
+
+```
+public class ApiService {
+
+    private static final String TAG=ApiService.class.getSimpleName();
+
+    private OkHttpClient okHttpClient;
+
+    @Inject
+    public ApiService(OkHttpClient okHttpClient){
+        this.okHttpClient=okHttpClient;
+    }
+
+    public void register(){
+        Log.d(TAG, "register: ApiService");
+        Request request=new Request.Builder()
+                .get()
+                .url("http://www.test.ink:32771/girls")
+                .build();
+        okHttpClient.newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result = response.body().string();
+                        Log.d(TAG, "onResponse: "+result);
+                    }
+                });
+    }
+}
+```
+
+最后在MainActivity中修改注入
+
+```
+public class MainActivity extends AppCompatActivity {
+
+    @Inject
+    UserManager userManager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        DaggerUserComponent
+                .builder()
+                .userModule(new UserModule(this))
+                .httpModule(new HttpModule())
+                .build()
+                .inject(this);
+
+        userManager.register();
+    }
+}
+```
+
+这是第一种方式的实现方法
+
+第二种方式是在UserComponent中添加HttpModule，别忘了先去掉在UserModule中添加的include={HttpModule.class}
+
+```
+@Component(modules = {UserModule.class,HttpModule.class})   //这句话将Componet与module关联起来
+public interface UserComponent {
+
+    void inject(MainActivity activity);  //这句话将Component与Container（也就是Activity）关联起来
+
+}
+```
+
+第三种方式是在定义一个HttpComponent
+
+```
+
+@Component(modules = {HttpModule.class})
+public interface HttpComponent {
+    
+}
+```
+
+然后在UserComponent中引用
+
+```
+@Component(modules = {UserModule.class},dependencies = HttpComponent.class)   //这句话将Componet与module关联起来
+public interface UserComponent {
+
+    void inject(MainActivity activity);  //这句话将Component与Container（也就是Activity）关联起来
+
+}
+```
+
+
 
 
 

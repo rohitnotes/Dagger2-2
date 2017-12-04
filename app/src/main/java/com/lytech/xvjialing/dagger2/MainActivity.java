@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
         DaggerUserComponent
                 .builder()
                 .userModule(new UserModule(this))
+                .httpModule(new HttpModule())
                 .build()
                 .inject(this);
 
