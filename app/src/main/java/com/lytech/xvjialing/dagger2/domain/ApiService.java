@@ -1,4 +1,4 @@
-package com.lytech.xvjialing.dagger2;
+package com.lytech.xvjialing.dagger2.domain;
 
 import android.util.Log;
 
@@ -22,7 +22,7 @@ public class ApiService {
 
     private OkHttpClient okHttpClient;
 
-    @Inject
+//    @Inject
     public ApiService(OkHttpClient okHttpClient){
         this.okHttpClient=okHttpClient;
     }

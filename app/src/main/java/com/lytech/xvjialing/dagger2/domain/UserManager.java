@@ -1,4 +1,7 @@
-package com.lytech.xvjialing.dagger2;
+package com.lytech.xvjialing.dagger2.domain;
+
+import com.lytech.xvjialing.dagger2.domain.ApiService;
+import com.lytech.xvjialing.dagger2.domain.UserStore;
 
 /**
  * Created by xvjialing on 2017/12/3.

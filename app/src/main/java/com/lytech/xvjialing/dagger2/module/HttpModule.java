@@ -1,4 +1,4 @@
-package com.lytech.xvjialing.dagger2;
+package com.lytech.xvjialing.dagger2.module;
 
 /**
  * Created by xvjialing on 2017/12/3.

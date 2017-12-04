@@ -583,6 +583,86 @@ public interface UserComponent {
 }
 ```
 
+## 创建和区分不同实例
+
+先创建一个TestService
+
+```
+public class TestService {
+
+    private static final String TAG=TestService.class.getSimpleName();
+    public void test(){
+        Log.d(TAG, "test: ");
+    }
+}
+```
+
+在创建一个TestModule
+
+```
+@Module
+public class TestModule {
+    
+    private static final String TAG=TestModule.class.getSimpleName();
+
+    @Named("dev")   //@Named注解用来区分不同的实例
+    @Provides
+    public TestService getTestServiceDev(){
+        Log.d(TAG, "getTestServiceDev: ");
+        return new TestService();
+    }
+
+    @Named("release")
+    @Provides
+    public TestService getTestServiceRelease(){
+        Log.d(TAG, "getTestServiceRelease: ");
+        return new TestService();
+    }
+}
+```
+
+并将TestModule加入到UserComponent中
+
+```
+@Component(modules = {UserModule.class,HttpModule.class, TestModule.class})   //这句话将Componet与module关联起来
+public interface UserComponent {
+
+    void inject(MainActivity activity);  //这句话将Component与Container（也就是Activity）关联起来
+
+}
+```
+
+最后在MainActivity中进行注入
+
+```
+public class MainActivity extends AppCompatActivity {
+
+    @Named("dev")
+    @Inject
+    TestService testService;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        DaggerUserComponent.create().inject(this);
+
+        testService.test();
+    }
+}
+```
+
+运行得到的结果是
+
+```
+12-04 14:05:57.002 18705-18705/com.lytech.xvjialing.dagger2 D/TestModule: getTestServiceDev: 
+12-04 14:05:57.002 18705-18705/com.lytech.xvjialing.dagger2 D/TestService: test:
+```
+
+说明@Named("dev")起作用了
+
 
 
 

@@ -1,7 +1,9 @@
-package com.lytech.xvjialing.dagger2;
+package com.lytech.xvjialing.dagger2.domain;
 
 import android.content.Context;
 import android.util.Log;
+
+import com.lytech.xvjialing.dagger2.domain.ApiService;
 
 /**
  * Created by xvjialing on 2017/12/3.
